@@ -5,12 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bem-vindo ao E-commerce</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 </head>
 <body class="bg-gray-100 font-sans text-center my-12">
 
-    <h1 class="text-4xl font-bold mb-8">Bem-vindo ao E-commerce</h1>
-    <button onclick="window.location.href='/template/create_product'" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mx-2">Criar Produto</button>
-    <button onclick="window.location.href='/template/list_product'" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mx-2">Listagem de Produtos</button>
+    <h1 class="text-4xl font-bold mb-8">Bem-vindo Faça Login para continuar!</h1>
+
+    <button onclick="window.location.href='/template/login'" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-4 px-8 rounded mx-2 my-4">
+        <i class="fas fa-user fa-lg"></i> Login
+    </button>
+    <div class="flex flex-col items-center mt-4">
+        <button onclick="window.location.href='/template/create_product'" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mx-2 my-2">Criar Produto</button>
+        <button onclick="window.location.href='/template/list_product'" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mx-2 my-2">Listagem de Produtos</button>
+    </div>
 
 </body>
 </html>
