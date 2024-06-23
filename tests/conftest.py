@@ -5,10 +5,12 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.pool import StaticPool
 
 from app.database.session import get_session
+from app.models.product import Product
 from app.models.user import User
 from app.startup import app
 from app.utils.base_model import Base
 from app.utils.security import get_password_hash
+from tests.factory.product_factory import ProductFactory
 from tests.factory.user_factory import UserFactory
 
 
@@ -144,3 +146,40 @@ def token(client, user):
         data={'username': user.username, 'password': user.clear_password},
     )
     return response.json()['access_token']
+
+
+@pytest.fixture
+def product(session):
+    """
+    Cria uma ingessão de produto para os testes.
+
+    Args:
+        session (Session): Uma instância de Session do SQLAlchemy.
+
+    Returns:
+        product: Uma instância de produto do sistema.
+    """
+    product = Product(
+        name='Product Test',
+        display_name='Product Test',
+        description='Product Test Description',
+        value=10.0,
+        available=False,
+        audit_user_ip='0.0.0.0',
+        audit_user_login='tester',
+    )
+    session.add(product)
+    session.commit()
+    session.refresh(product)
+
+
+@pytest.fixture
+def product_10(session):
+    """
+    Cria uma lista de 10 objetos Products para os testes.
+    """
+    product: list[Product] = ProductFactory.build_batch(10)
+    session.add_all(product)
+    session.commit()
+
+    return product
