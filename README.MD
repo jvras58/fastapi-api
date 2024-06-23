@@ -1,5 +1,3 @@
-Aqui está uma versão aprimorada do README, com mais detalhes e melhorias na formatação:
-
 <h1 align="center">
   <a href="">Projeto de API com FASTAPI</a>
 </h1>
