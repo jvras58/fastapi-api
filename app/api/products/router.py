@@ -36,12 +36,15 @@ def get_all_product(
     current_user: CurrentUser,
     skip: int = 0,
     limit: int = 100,
-    user_id: int = None,
+    name: str = None,
+    value: float = None,
 ):
 
     criterias = {}
-    if user_id is not None:
-        criterias['user_id'] = user_id
+    if name:
+        criterias['name'] = name
+    if value:
+        criterias['value'] = value
 
     products: list[Product] = Product_controller.get_all(
         db_session, skip, limit, **criterias

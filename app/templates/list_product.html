@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Listagem de Produtos</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="font-sans bg-gray-100 p-5">
+
+    <h1 class="text-2xl font-bold mb-5">Listagem de Produtos</h1>
+    <div class="mb-5">
+        <input type="text" id="filterName" placeholder="Nome" class="border rounded py-2 px-4">
+        <input type="number" id="filterValue" placeholder="Valor" class="border rounded py-2 px-4">
+        <button id="filterButton" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Filtrar</button>
+        <button id="clearFiltersButton" class="hidden ml-2 bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded">Limpar Filtros</button>
+    </div>
+    <button onclick="window.location.href='/template/create_product'" class="mb-5 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Adicionar Novo Produto</button>
+    
+    <table id="product-list" class="w-full text-left border-collapse">
+        <thead>
+            <tr>
+                <th class="border-b-2 p-2">Nome</th>
+                <th class="border-b-2 p-2">Valor</th>
+                <th class="border-b-2 p-2">Disponível</th>
+            </tr>
+        </thead>
+        <tbody class="bg-white">
+            <!-- Produtos serão listados aqui -->
+        </tbody>
+    </table>
+
+    <script>
+        function loadProducts(name = '', value = '') {
+            const params = new URLSearchParams({
+                ...(name && { name: name }),
+                ...(value && { value: value.toString() }),
+            });
+
+            fetch(`/products/?${params.toString()}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + localStorage.getItem('accessToken'),
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Falha na solicitação: ' + response.statusText);
+                }
+                return response.json();
+            })
+            .then(data => {
+                const tbody = document.querySelector('#product-list tbody');
+                tbody.innerHTML = ''; // Limpa a tabela antes de adicionar novos produtos
+
+                if (data.Product && Array.isArray(data.Product) && data.Product.length > 0) {
+                    data.Product.forEach(produto => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `<td class="border px-4 py-2">${produto.name}</td><td class="border px-4 py-2">${parseFloat(produto.value).toFixed(2)}</td><td class="border px-4 py-2">${produto.available ? 'Sim' : 'Não'}</td>`;
+                        tbody.appendChild(row);
+                    });
+                } else {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `<td class="border px-4 py-2" colspan="3">Nenhum produto encontrado.</td>`;
+                    tbody.appendChild(row);
+                }
+
+                // Mostrar ou ocultar botão de limpar filtros
+                const clearFiltersButton = document.getElementById('clearFiltersButton');
+                clearFiltersButton.classList.toggle('hidden', !(name || value));
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                alert('Ocorreu um erro ao carregar os produtos. Detalhes: ' + error.message);
+            });
+        }
+
+        function applyFilters() {
+            const name = document.getElementById('filterName').value;
+            const value = document.getElementById('filterValue').value;
+            loadProducts(name, value);
+        }
+
+        function clearFilters() {
+            document.getElementById('filterName').value = '';
+            document.getElementById('filterValue').value = '';
+            loadProducts(); // Carrega todos os produtos novamente após limpar os filtros
+        }
+
+        document.getElementById('filterButton').addEventListener('click', applyFilters);
+        document.getElementById('clearFiltersButton').addEventListener('click', clearFilters);
+
+        // Carregar todos os produtos quando a página carregar
+        window.onload = () => loadProducts();
+    </script>
+
+</body>
+</html>

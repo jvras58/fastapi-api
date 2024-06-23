@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Criar Produto</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 flex items-center justify-center h-screen">
+
+    <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md transition transform hover:scale-105 hover:shadow-2xl">
+        <h1 class="text-2xl font-bold mb-6 text-gray-800 text-center">Criar Produto</h1>
+
+        <form id="product-form" class="space-y-4">
+    
+            <div>
+                <label for="name" class="block text-sm font-medium text-gray-700">Nome do produto:</label>
+                <input type="text" id="name" name="name" class="mt-1 p-2 block w-full rounded-md border border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500" required>
+            </div>
+
+            <div>
+                <label for="display_name" class="block text-sm font-medium text-gray-700">Nome Social do Produto:</label>
+                <input type="text" id="display_name" name="display_name" class="mt-1 p-2 block w-full rounded-md border border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500" required>
+            </div>
+            
+            <div>
+                <label for="description" class="block text-sm font-medium text-gray-700">Descrição do produto:</label>
+                <input type="text" id="description" name="description" class="mt-1 p-2 block w-full rounded-md border border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500" required>
+            </div>
+
+            <div>
+                <label for="value" class="block text-sm font-medium text-gray-700">Valor do produto:</label>
+                <input type="number" id="value" name="value" step="0.01" class="mt-1 p-2 block w-full rounded-md border border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500" required>
+            </div>
+
+            <div>
+                <label for="available" class="block text-sm font-medium text-gray-700">Disponível para venda:</label>
+                <select id="available" name="available" class="mt-1 p-2 block w-full rounded-md border border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                    <option value="sim">Sim</option>
+                    <option value="não">Não</option>
+                </select>
+            </div>
+
+            <div>
+                <button type="submit" class="w-full bg-blue-600 text-white p-2 rounded-md hover:bg-blue-700 transition">Cadastrar Produto</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const form = document.querySelector("#product-form");
+        form.addEventListener("submit", function(event) {
+            event.preventDefault();
+
+            const formData = new FormData(form);
+            const jsonData = {};
+            formData.forEach((value, key) => {
+                if (key === "available") {
+                    jsonData[key] = value === "sim";
+                } else if (key === "value") {
+                    jsonData[key] = parseFloat(value);
+                } else {
+                    jsonData[key] = value;
+                }
+            });
+
+            fetch("/products/", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + localStorage.getItem('accessToken'),
+                },
+                body: JSON.stringify(jsonData),
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Falha na solicitação: ' + response.statusText);
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Success:', data);
+                window.location.href = '/template/index';
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                alert('Ocorreu um erro ao criar o produto. Detalhes: ' + error.message);
+            });
+        });
+    });
+    </script>
+
+</body>
+</html>

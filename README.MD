@@ -32,10 +32,10 @@ Este projeto está sendo desenvolvido com:
 
 ```bash
 # Clonar este repositório
-$ git clone {link_deste_repositorio}
+$ git clone https://github.com/jvras58/fastapi-api.git
 
 # Ir para o repositório
-$ cd {pasta_deste_repositorio}
+$ cd fastapi-api
 
 # Criar o arquivo .env com os valores adequados ao ambiente. pasta .secrets precisa ter (TESTE_SECRET).
 $ cp .env-semple .env
@@ -49,14 +49,17 @@ $ poetry install
 # Executar as migrations
   $ alembic upgrade head
 
+# teste a api
+$ task test
+
 # Executar a api
 $ task run
 
-# teste a api
-$ task test
 ```
 
-- Endereço local: (http://localhost:8000)
+- Endereço local: (http://localhost:8000/)
+
+- Endereço do Front: (http://localhost:8000/template/create_user)
 
 
 ---

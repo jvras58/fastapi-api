@@ -12,7 +12,6 @@ class ProductSchema(BaseAuditDTOSchema):
     available: bool
 
 
-
 class ProductPublic(ProductSchema, BaseAuditModelSchema):
     id: int
     display_name: str
@@ -20,7 +19,6 @@ class ProductPublic(ProductSchema, BaseAuditModelSchema):
     description: str
     value: float
     available: bool
-
 
 
 class ProductListSchema(BaseModel):

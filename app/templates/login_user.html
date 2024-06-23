@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login de Usuário</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 flex items-center justify-center h-screen">
+
+    <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md transition transform hover:scale-105 hover:shadow-2xl">
+        <h2 class="text-2xl font-bold mb-6 text-gray-800 text-center">Login</h2>
+        <form id="login-form" class="space-y-4">
+            <div>
+                <label for="username" class="block text-sm font-medium text-gray-700">Nome</label>
+                <input type="username" id="username" name="username" class="mt-1 p-2 block w-full rounded-md border border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500" placeholder="seuemail@exemplo.com" required>
+            </div>
+            <div>
+                <label for="password" class="block text-sm font-medium text-gray-700">Senha</label>
+                <input type="password" id="password" name="password" class="mt-1 p-2 block w-full rounded-md border border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500" placeholder="SuaSenha123#" required>
+            </div>
+            <div>
+                <button type="submit" class="w-full bg-blue-600 text-white p-2 rounded-md hover:bg-blue-700 transition">Entrar</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const form = document.querySelector("#login-form");
+            form.addEventListener("submit", function(event) {
+                event.preventDefault();
+
+                const formData = new FormData(form);
+                const urlEncodedData = new URLSearchParams(formData).toString();
+
+                fetch("/auth/token", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: urlEncodedData,
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Falha na autenticação: ' + response.statusText);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('Success:', data);
+                    localStorage.setItem('accessToken', data.access_token);
+                    alert('Login realizado com sucesso!');
+                    window.location.href = '/template/index';
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                    alert('Ocorreu um erro ao realizar o login: ' + error.message);
+                });
+            });
+        });
+    </script>
+
+</body>
+</html>
