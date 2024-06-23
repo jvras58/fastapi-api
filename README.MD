@@ -1,5 +1,5 @@
 <h1 align="center">
-  <a href="https://ceua-staging.ufpe.br/">Projeto de Estudos com FASTAPI</a>
+  <a href="">Projeto de API com FASTAPI</a>
 </h1>
 
 <p align="center">
@@ -32,10 +32,10 @@ Este projeto está sendo desenvolvido com:
 
 ```bash
 # Clonar este repositório
-$ git clone git@github.com:jvras58/back-fastapi.git
+$ git clone {link_deste_repositorio}
 
 # Ir para o repositório
-$ cd back-fastapi  
+$ cd {pasta_deste_repositorio}
 
 # Criar o arquivo .env com os valores adequados ao ambiente. pasta .secrets precisa ter (TESTE_SECRET).
 $ cp .env-semple .env
@@ -51,6 +51,9 @@ $ poetry install
 
 # Executar a api
 $ task run
+
+# teste a api
+$ task test
 ```
 
 - Endereço local: (http://localhost:8000)

@@ -5,12 +5,6 @@ from fastapi import status as HTTP_STATUS
 from sqlalchemy.orm import Session
 
 from app.api.authentication.controller import get_current_user
-from app.api.authorization.controller import (
-    get_user_authorized_transactions,
-    validate_transaction_access,
-)
-from app.api.transaction.enum_operation_code import EnumOperationCode as op
-from app.api.transaction.schemas import TransactionListSchema
 from app.api.user.controller import UserController
 from app.api.user.schemas import UserList, UserPublic, UserSchema
 from app.database.session import get_session
@@ -47,8 +41,6 @@ async def create_new_user(user: UserSchema, request: Request, session: Session):
     response_model=UserPublic,
 )
 def get_user_by_id(user_id: int, db_session: Session, current_user: CurrentUser):
-    validate_transaction_access(db_session, current_user, op.OP_1040005.value)
-
     return user_controller.get(db_session, user_id)
 
 
@@ -56,7 +48,6 @@ def get_user_by_id(user_id: int, db_session: Session, current_user: CurrentUser)
 def read_users(
     db_session: Session, current_user: CurrentUser, skip: int = 0, limit: int = 100
 ):
-    validate_transaction_access(db_session, current_user, op.OP_1040003.value)
     users: list[User] = user_controller.get_all(db_session, skip, limit)
     return {'users': users}
 
@@ -69,7 +60,6 @@ def update_existing_user(
     db_session: Session,
     current_user: CurrentUser,
 ):
-    validate_transaction_access(db_session, current_user, op.OP_1040002.value)
 
     try:
         new_user: User = User(**user.model_dump())
@@ -91,7 +81,6 @@ def delete_existing_user(
     db_session: Session,
     current_user: CurrentUser,
 ):
-    validate_transaction_access(db_session, current_user, op.OP_1040004.value)
 
     try:
         user_controller.delete(db_session, user_id)
@@ -99,9 +88,3 @@ def delete_existing_user(
         raise HTTPException(status_code=404, detail=ex.args[0]) from ex
 
     return {'detail': 'User deleted'}
-
-
-@router.get('/{user_id}/transactions', response_model=TransactionListSchema)
-def get_user_transactions(user_id: int, db_session: Session, current_user: CurrentUser):
-    validate_transaction_access(db_session, current_user, op.OP_1040006.value)
-    return {'transactions': get_user_authorized_transactions(db_session, user_id)}

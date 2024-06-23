@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "back-fastapi"
 version = "0.1.0"
-description = "back de estudos fastapi"
+description = "back fastapi"
 authors = ["jvras <jvras@cin.ufpe.br>"]
 readme = "README.md"
 

@@ -44,9 +44,6 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
 
 
 def extract_username(jwt_token: str) -> str:
-    """
-    docstring
-    """
     payload = jwt.decode(
         jwt_token,
         get_settings().SECURITY_API_SECRET_KEY,

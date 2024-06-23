@@ -59,36 +59,6 @@ class IntegrityValidationException(Exception):
         super().__init__(exc_msg)
 
 
-class IllegalAccessExcetion(HTTPException):
-    """
-    Representa um erro de acesso ilegal.
-    """
-
-    def __init__(self, user_id: int, op_code: str):
-        super().__init__(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail=f'User[{user_id}] not authorized to access Transaction[{op_code}]',
-            headers={'WWW-Authenticate': 'Bearer'},
-        )
-
-
-class AmbiguousAuthorizationException(HTTPException):
-    """
-    Representa um erro de definição ambigoa de autorização.
-    """
-
-    def __init__(self, user_id: int, op_code: str):
-        msg = (
-            f'Found more than one authorization for User[{user_id}] '
-            f'and Transaction[{op_code}]'
-        )
-        super().__init__(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail=msg,
-            headers={'WWW-Authenticate': 'Bearer'},
-        )
-
-
 class ObjectConflitException(Exception):
     """
     Representa um erro quando um objeto entra em conflito com outro
